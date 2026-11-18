@@ -8,6 +8,28 @@ from pathlib import Path
 from threading import Lock
 from flask import Flask, jsonify, request, send_from_directory
 
+import os
+from mssql_python import connect
+
+def get_db_connection():
+    server = os.environ["SQL_SERVER"]
+    database = os.environ["SQL_DATABASE"]
+    authentication = os.environ.get(
+        "SQL_AUTHENTICATION",
+        "ActiveDirectoryMSI"
+    )
+
+    connection_string = (
+        f"Server=tcp:{server},1433;"
+        f"Database={database};"
+        "Encrypt=yes;"
+        "TrustServerCertificate=no;"
+        f"Authentication={authentication};"
+    )
+
+    return connect(connection_string, timeout=30)
+
+
 app = Flask(__name__, static_folder=None)
 BASE = Path(__file__).parent
 records = []
