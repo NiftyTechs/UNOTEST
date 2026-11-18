@@ -109,6 +109,7 @@ def js():
     return send_from_directory(BASE, "script.js")
 
 
+
 # -----------------------------------
 # HEALTH CHECK
 # -----------------------------------
@@ -137,16 +138,26 @@ def database_health():
             database="connected"
         )
 
-    except Exception:
-        logger.exception("SQL database health check failed")
+    except Exception as exc:
+        app.logger.error(
+            "Database connection failed: %s: %s",
+            type(exc).__name__,
+            str(exc)
+        )
+
+        app.logger.exception(
+            "SQL connection traceback"
+        )
+
         return jsonify(
-            status="error",
-            database="unavailable"
+            database="unavailable",
+            status="error"
         ), 503
 
     finally:
         if conn is not None:
             conn.close()
+
 
 
 # -----------------------------------
