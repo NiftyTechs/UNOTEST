@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Task Manager</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <span class="eyebrow">Azure + GitHub Demo</span>
+      <h1>My Task Manager</h1>
+      <p>A simple app deployed automatically with GitHub Actions.</p>
+    </header>
+    <section class="panel" aria-label="Task manager">
+      <form id="task-form">
+        <label for="task-input">New task</label>
+        <div class="input-row">
+          <input id="task-input" type="text" placeholder="What do you need to do?" maxlength="120" required autocomplete="off" />
+          <button type="submit">Add task</button>
+        </div>
+      </form>
+      <div class="summary"><strong id="remaining">0 tasks remaining</strong><button type="button" id="clear-completed" class="text-button">Clear completed</button></div>
+      <ul id="task-list" aria-label="Tasks"></ul>
+      <p id="empty-state" class="empty">No tasks yet. Add one above!</p>
+    </section>
+    <footer>Tasks are saved in this browser only.</footer>
+  </main>
+</body>
+</html>
