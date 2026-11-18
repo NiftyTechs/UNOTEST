@@ -26,7 +26,22 @@
       <ul id="task-list" aria-label="Tasks"></ul>
       <p id="empty-state" class="empty">No tasks yet. Add one above!</p>
     </section>
-    <footer>Tasks are saved in this browser only.</footer>
+    <section class="panel" aria-label="Test records" style="margin-top:24px">
+      <h2>Test Records (Python API)</h2>
+      <p>Add a test record. Data is stored in server memory and resets when the web app restarts.</p>
+      <form id="record-form">
+        <label for="record-name">Name</label>
+        <input id="record-name" name="name" type="text" maxlength="100" required placeholder="Full name" autocomplete="off" />
+        <label for="record-email">Email</label>
+        <input id="record-email" name="email" type="email" maxlength="200" required placeholder="Email" autocomplete="off" />
+        <label for="record-notes">Notes</label>
+        <input id="record-notes" name="notes" type="text" maxlength="300" placeholder="Optional notes" autocomplete="off" />
+        <button type="submit">Add record</button>
+      </form>
+      <p id="record-status" role="status" aria-live="polite"></p>
+      <div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Notes</th><th>Action</th></tr></thead><tbody id="record-rows"></tbody></table></div>
+    </section>
+    <footer>Tasks are saved in this browser only. Test records are temporary and held in Python server memory.</footer>
   </main>
 </body>
 </html>

@@ -1,21 +1,24 @@
-# Azure + GitHub Task Manager
+# UNOTEST — Flask App Service Demo
 
-Simple HTML/CSS/JavaScript task manager. Tasks are stored in your browser's local storage, not on a server.
+This is a Python Flask web app containing the existing localStorage task manager and a new test-record form/table backed by a Flask API.
 
 ## Run locally
 
-Open `index.html` in a modern browser, or run `python3 -m http.server 8000` in this folder and visit http://localhost:8000.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
 
-## Deploy to Azure Static Web Apps
+Open http://127.0.0.1:5000 and test the table. GET /api/health returns `{"framework":"flask","status":"ok"}`.
 
-1. Create a new repository on GitHub.
-2. Upload `index.html`, `styles.css`, `script.js`, and `README.md` to the **root** of the repository, then commit to `main`.
-3. In Azure Portal, create a **Static Web App** and select the **Free** hosting plan.
-4. Choose **GitHub** as the deployment source, authorize access, and select your repository and `main` branch.
-5. Under Build Details, use **Custom**: App location `/`, API location blank, Output location blank.
-6. Select **Review + create** and **Create**. Azure creates a GitHub Actions workflow in `.github/workflows/`.
-7. Open the repository's **Actions** tab to monitor deployment. In Azure's Static Web App resource, open the generated URL.
+## Deploy from GitHub to Azure App Service
 
-Any subsequent commit to `main` triggers a redeployment.
+1. Upload the **contents** of this folder to the root of GitHub repo `NiftyTechs/UNOTEST` on branch `main`, replacing the original frontend files.
+2. Create an Azure **Web App**, choose **Code**, **Python**, **Linux**, and a compatible plan.
+3. Under your App Service **Deployment Center**, choose **GitHub**, authorize access, select `NiftyTechs/UNOTEST` and branch `main`, and save to create the GitHub Actions workflow.
+4. If startup detection does not work, set **Startup Command** to `gunicorn --bind=0.0.0.0:8000 app:app`.
+5. Open the App Service default domain. Test `/api/health` and the form.
 
-Note: Do not put secret keys in these files: they are downloaded to visitors' browsers.
+**Important:** The records API uses temporary in-process memory. Records reset after restarts/deployments and might differ between workers/instances. Never enter sensitive/personal information in this public demo. For real shared storage, add a managed database (for example Azure SQL or PostgreSQL), authentication and appropriate access controls.

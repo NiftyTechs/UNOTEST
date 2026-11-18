@@ -51,3 +51,58 @@ form.addEventListener('submit', event => {
 });
 clearCompleted.addEventListener('click', () => { tasks = tasks.filter(task => !task.done); save(); render(); });
 render();
+
+// Test-record CRUD uses the Flask Python API; never insert user text as HTML.
+const recordForm = document.querySelector('#record-form');
+const recordRows = document.querySelector('#record-rows');
+const recordStatus = document.querySelector('#record-status');
+async function api(path, options = {}) {
+  const response = await fetch(path, options);
+  let data;
+  try { data = await response.json(); } catch { throw Error('Invalid server response'); }
+  if (!response.ok) throw Error(data.error || 'Server error');
+  return data;
+}
+async function loadRecords() {
+  try {
+    const data = await api('/api/records');
+    recordRows.replaceChildren();
+    for (const record of data) {
+      const tr = document.createElement('tr');
+      for (const key of ['id', 'name', 'email', 'notes']) {
+        const td = document.createElement('td');
+        td.textContent = String(record[key] ?? '');
+        tr.append(td);
+      }
+      const action = document.createElement('td');
+      const del = document.createElement('button');
+      del.textContent = 'Delete';
+      del.type = 'button';
+      del.addEventListener('click', async () => {
+        try {
+          await api(`/api/records/${record.id}`, { method: 'DELETE' });
+          recordStatus.textContent = 'Record deleted.';
+          await loadRecords();
+        } catch (err) { recordStatus.textContent = err.message; }
+      });
+      action.append(del);
+      tr.append(action);
+      recordRows.append(tr);
+    }
+  } catch (err) { recordStatus.textContent = `Unable to load records: ${err.message}`; }
+}
+recordForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const payload = {
+    name: document.querySelector('#record-name').value.trim(),
+    email: document.querySelector('#record-email').value.trim(),
+    notes: document.querySelector('#record-notes').value.trim(),
+  };
+  try {
+    await api('/api/records', {method:'POST', headers: {'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    recordForm.reset();
+    recordStatus.textContent = 'Record added successfully.';
+    await loadRecords();
+  } catch (err) { recordStatus.textContent = err.message; }
+});
+loadRecords();
