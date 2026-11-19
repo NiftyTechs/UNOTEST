@@ -1,11 +1,4 @@
 
-"""UNOTEST Flask application with Azure SQL Database.
-
-Uses system-assigned managed identity for passwordless SQL access.
-Demo only: do not use with sensitive or real personal information
-until authentication and authorization are implemented.
-"""
-
 import os
 import logging
 from pathlib import Path
